@@ -5,7 +5,7 @@
  */
 'use strict';
 
-const frConfig = require('./default-config.js');
+import defaultConfig from './default-config.js';
 
 const unsupportedAuditIds = [
   'experimental-interaction-to-next-paint',
@@ -13,25 +13,25 @@ const unsupportedAuditIds = [
   'work-during-interaction',
 ];
 
-const audits = frConfig.audits?.filter(audit =>
+const audits = defaultConfig.audits?.filter(audit =>
   !unsupportedAuditIds.find(auditId => audit.toString().endsWith(auditId)));
 
 /** @type {LH.Config.Category} */
 const performance = {
   // @ts-expect-error categories will always exist on the default config.
-  ...frConfig.categories['performance'],
-  auditRefs: frConfig.categories?.['performance'].auditRefs
+  ...defaultConfig.categories['performance'],
+  auditRefs: defaultConfig.categories?.['performance'].auditRefs
     .filter(auditRef => !unsupportedAuditIds.includes(auditRef.id)) || [],
 };
 
 /** @type {Record<string, LH.Config.Category>} */
 const categories = {
-  ...frConfig.categories,
+  ...defaultConfig.categories,
   'performance': performance,
 };
 
 /** @type {LH.Config.Json} */
-const defaultConfig = {
+const legacyDefaultConfig = {
   passes: [{
     passName: 'defaultPass',
     recordTrace: true,
@@ -81,9 +81,8 @@ const defaultConfig = {
   }],
   audits,
   categories,
-  groups: frConfig.groups,
-  settings: frConfig.settings,
+  groups: defaultConfig.groups,
+  settings: defaultConfig.settings,
 };
 
-module.exports = defaultConfig;
-
+export default legacyDefaultConfig;

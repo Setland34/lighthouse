@@ -127,6 +127,7 @@ describe('Lighthouse Viewer', () => {
       const nonNavigationAudits = [
         'experimental-interaction-to-next-paint',
         'uses-responsive-images-snapshot',
+        'work-during-interaction',
       ];
       for (const category of lighthouseCategories) {
         let expected = getAuditsOfCategory(category);

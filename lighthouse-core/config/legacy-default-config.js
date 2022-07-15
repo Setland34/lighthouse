@@ -5,84 +5,82 @@
  */
 'use strict';
 
+/**
+ * @fileoverview Construct the legacy default config from the standard default config.
+ */
+
 import defaultConfig from './default-config.js';
 
+/** @type {LH.Config.Json} */
+const legacyDefaultConfig = JSON.parse(JSON.stringify(defaultConfig));
+if (!legacyDefaultConfig.categories) {
+  throw new Error('Default config should always have categories');
+}
+
+// These properties are ignored in Legacy navigations.
+delete legacyDefaultConfig.artifacts;
+delete legacyDefaultConfig.navigations;
+
+// These audits don't work in Legacy navigation mode so we remove them.
 const unsupportedAuditIds = [
   'experimental-interaction-to-next-paint',
   'uses-responsive-images-snapshot',
   'work-during-interaction',
 ];
 
-const audits = defaultConfig.audits?.filter(audit =>
+legacyDefaultConfig.audits = legacyDefaultConfig.audits?.filter(audit =>
   !unsupportedAuditIds.find(auditId => audit.toString().endsWith(auditId)));
 
-/** @type {LH.Config.Category} */
-const performance = {
-  // @ts-expect-error categories will always exist on the default config.
-  ...defaultConfig.categories['performance'],
-  auditRefs: defaultConfig.categories?.['performance'].auditRefs
-    .filter(auditRef => !unsupportedAuditIds.includes(auditRef.id)) || [],
-};
+legacyDefaultConfig.categories['performance'].auditRefs =
+  legacyDefaultConfig.categories['performance'].auditRefs.filter(auditRef =>
+    !unsupportedAuditIds.includes(auditRef.id))
 
-/** @type {Record<string, LH.Config.Category>} */
-const categories = {
-  ...defaultConfig.categories,
-  'performance': performance,
-};
-
-/** @type {LH.Config.Json} */
-const legacyDefaultConfig = {
-  passes: [{
-    passName: 'defaultPass',
-    recordTrace: true,
-    useThrottling: true,
-    pauseAfterFcpMs: 1000,
-    pauseAfterLoadMs: 1000,
-    networkQuietThresholdMs: 1000,
-    cpuQuietThresholdMs: 1000,
-    gatherers: [
-      'css-usage',
-      'js-usage',
-      'viewport-dimensions',
-      'console-messages',
-      'anchor-elements',
-      'image-elements',
-      'link-elements',
-      'meta-elements',
-      'script-elements',
-      'scripts',
-      'iframe-elements',
-      'inputs',
-      'main-document-content',
-      'global-listeners',
-      'dobetterweb/doctype',
-      'dobetterweb/domstats',
-      'dobetterweb/optimized-images',
-      'dobetterweb/password-inputs-with-prevented-paste',
-      'dobetterweb/response-compression',
-      'dobetterweb/tags-blocking-first-paint',
-      'seo/font-size',
-      'seo/embedded-content',
-      'seo/robots-txt',
-      'seo/tap-targets',
-      'accessibility',
-      'trace-elements',
-      'inspector-issues',
-      'source-maps',
-      'full-page-screenshot',
-    ],
-  },
-  {
-    passName: 'offlinePass',
-    loadFailureMode: 'ignore',
-    gatherers: [
-      'service-worker',
-    ],
-  }],
-  audits,
-  categories,
-  groups: defaultConfig.groups,
-  settings: defaultConfig.settings,
-};
+legacyDefaultConfig.passes = [{
+  passName: 'defaultPass',
+  recordTrace: true,
+  useThrottling: true,
+  pauseAfterFcpMs: 1000,
+  pauseAfterLoadMs: 1000,
+  networkQuietThresholdMs: 1000,
+  cpuQuietThresholdMs: 1000,
+  gatherers: [
+    'css-usage',
+    'js-usage',
+    'viewport-dimensions',
+    'console-messages',
+    'anchor-elements',
+    'image-elements',
+    'link-elements',
+    'meta-elements',
+    'script-elements',
+    'scripts',
+    'iframe-elements',
+    'inputs',
+    'main-document-content',
+    'global-listeners',
+    'dobetterweb/doctype',
+    'dobetterweb/domstats',
+    'dobetterweb/optimized-images',
+    'dobetterweb/password-inputs-with-prevented-paste',
+    'dobetterweb/response-compression',
+    'dobetterweb/tags-blocking-first-paint',
+    'seo/font-size',
+    'seo/embedded-content',
+    'seo/robots-txt',
+    'seo/tap-targets',
+    'accessibility',
+    'trace-elements',
+    'inspector-issues',
+    'source-maps',
+    'full-page-screenshot',
+  ],
+},
+{
+  passName: 'offlinePass',
+  loadFailureMode: 'ignore',
+  gatherers: [
+    'service-worker',
+  ],
+}];
 
 export default legacyDefaultConfig;

@@ -69,12 +69,12 @@ const expectations = {
               // These requests are emitted in workers so Lighthouse doesn't capture them.
               // For some reason, legacy navigations in DevTools still pick them up.
               // https://github.com/GoogleChrome/lighthouse/issues/14211
-              {legacyOnly: true, _runner: 'devtools', url: 'http://localhost:10200/simple-worker.mjs'},
-              {legacyOnly: true, _runner: 'devtools', url: 'http://localhost:10503/simple-worker.mjs'},
-              {legacyOnly: true, _runner: 'devtools', url: 'http://localhost:10200/simple-script.js?esm', resourceType: 'Script'},
-              {legacyOnly: true, _runner: 'devtools', url: 'http://localhost:10503/simple-script.js?esm', resourceType: 'Script'},
-              {legacyOnly: true, _runner: 'devtools', url: 'http://localhost:10200/simple-script.js?importScripts', resourceType: 'Other'},
-              {legacyOnly: true, _runner: 'devtools', url: 'http://localhost:10503/simple-script.js?importScripts', resourceType: 'Other'},
+              {_legacyOnly: true, _runner: 'devtools', url: 'http://localhost:10200/simple-worker.mjs'},
+              {_legacyOnly: true, _runner: 'devtools', url: 'http://localhost:10503/simple-worker.mjs'},
+              {_legacyOnly: true, _runner: 'devtools', url: 'http://localhost:10200/simple-script.js?esm', resourceType: 'Script'},
+              {_legacyOnly: true, _runner: 'devtools', url: 'http://localhost:10503/simple-script.js?esm', resourceType: 'Script'},
+              {_legacyOnly: true, _runner: 'devtools', url: 'http://localhost:10200/simple-script.js?importScripts', resourceType: 'Other'},
+              {_legacyOnly: true, _runner: 'devtools', url: 'http://localhost:10503/simple-script.js?importScripts', resourceType: 'Other'},
             ],
             // Ensure the above is exhaustive (except for favicon, which won't be fetched in devtools/LR).
             _excludes: [
